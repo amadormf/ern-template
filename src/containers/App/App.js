@@ -7,6 +7,7 @@ import { InfoBar } from 'components';
 import { push } from 'react-router-redux';
 import config from '../../config/config';
 import { asyncConnect } from 'redux-async-connect';
+import styles from './App.styl';
 
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
@@ -40,7 +41,6 @@ export default class App extends Component {
 
   render() {
     const {user} = this.props;
-    const styles = require('./App.styl');
 
     return (
       <div className={styles.app}>
