@@ -1,6 +1,8 @@
 var webpack = require('webpack');
+var path = require('path');
 
 module.exports = function (config) {
+
   config.set({
 
     browsers: ['PhantomJS'],
@@ -11,21 +13,24 @@ module.exports = function (config) {
 
     files: [
       './node_modules/phantomjs-polyfill/bind-polyfill.js',
-      'tests.webpack.js'
+      './test/index.js',
     ],
 
+
     preprocessors: {
-      'tests.webpack.js': [ 'webpack', 'sourcemap' ]
+      'test/index.js': [ 'webpack', 'sourcemap' ],
+      './src/**/*.js': [ 'webpack', 'sourcemap', 'coverage' ],
     },
 
-    reporters: [ 'mocha' ],
+    reporters: [ 'mocha', 'coverage' ],
 
     plugins: [
-      require("karma-webpack"),
-      require("karma-mocha"),
-      require("karma-mocha-reporter"),
-      require("karma-phantomjs-launcher"),
-      require("karma-sourcemap-loader")
+      require('karma-webpack'),
+      require('karma-mocha'),
+      require('karma-mocha-reporter'),
+      require('karma-phantomjs-launcher'),
+      require('karma-sourcemap-loader'),
+      require('karma-coverage')
     ],
 
     webpack: {
@@ -35,10 +40,18 @@ module.exports = function (config) {
           { test: /\.(jpe?g|png|gif|svg)$/, loader: 'url', query: {limit: 10240} },
           { test: /\.js$/, exclude: /node_modules/, loaders: ['babel']},
           { test: /\.json$/, loader: 'json-loader' },
-          { test: /\.less$/, loader: 'style!css!less' },
-          { test: /\.scss$/, loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!sass?outputStyle=expanded&sourceMap' }
-        ]
+          {
+            test  : /\.styl$/,
+            loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]?browsers=last 2 version!stylus?outputStyle=expanded&sourceMap'
+          },
+        ],
+        postLoaders: [ { //delays coverage til after tests are run, fixing transpiled source coverage error
+          test: /\.js$/,
+          exclude: /(test|node_modules|bower_components)\//,
+          loader: 'istanbul-instrumenter',
+        }]
       },
+
       resolve: {
         modulesDirectories: [
           'src',
@@ -63,4 +76,10 @@ module.exports = function (config) {
     }
 
   });
+};
+
+function resolveCwd() {
+  const args = [].slice.call(arguments, 0);
+  args.unshift(process.cwd());
+  return path.join.apply(path, args);
 };

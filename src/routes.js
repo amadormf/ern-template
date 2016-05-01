@@ -6,20 +6,13 @@ import {
     NotFound,
   } from 'containers';
 
-export default (store) => {
-
-  /**
-   * Please keep routes in alphabetical order
-   */
-  return (
+export default (store) =>
+  (
     <Route path="/" component={App}>
       { /* Home (main) route */ }
       <IndexRoute component={Home} />
-
-      { /* Routes requiring login */ }
 
       { /* Catch all route */ }
       <Route path="*" component={NotFound} status={404} />
     </Route>
   );
-};
