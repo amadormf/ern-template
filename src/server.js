@@ -17,7 +17,6 @@ import { match } from 'react-router';
 import { ReduxAsyncConnect, loadOnServer } from 'redux-async-connect';
 import createHistory from 'react-router/lib/createMemoryHistory';
 import { Provider } from 'react-redux';
-import getRoutes from './routes';
 
 const targetUrl = `http://${config.apiHost}:${config.apiPort}`;
 const pretty = new PrettyError();
@@ -73,6 +72,8 @@ app.use((req, res) => {
     return;
   }
 
+  const getRoutes = require(path.join(process.cwd(), config.routes.src));
+
   match(
     { history, routes: getRoutes(store), location: req.originalUrl },
     (error, redirectLocation, renderProps) => {
@@ -114,9 +115,6 @@ if (config.port) {
     if (err) {
       console.error(err);
     }
-    console.info(
-      `----\n==> ✅  ${config.app.title} is running, talking to API server on ${config.apiPort}.`
-    );
     console.info('==> 💻  Open http://%s:%s in a browser to view the app.', config.host, config.port);
   });
 } else {

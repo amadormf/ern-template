@@ -13,12 +13,13 @@ module.exports = function (config) {
 
     files: [
       './node_modules/phantomjs-polyfill/bind-polyfill.js',
-      './test/index.js',
+      './test/*.js',
     ],
 
 
     preprocessors: {
-      'test/index.js': [ 'webpack', 'sourcemap' ],
+      './test/*.js': [ 'webpack', 'sourcemap', 'coverage' ],
+      //'test/loadRoutes': [ 'webpack', 'sourcemap', 'coverate' ],
       './src/**/*.js': [ 'webpack', 'sourcemap', 'coverage' ],
     },
 
@@ -36,29 +37,48 @@ module.exports = function (config) {
     webpack: {
       devtool: 'inline-source-map',
       module: {
+        noParse: [
+          /node_modules\/sinon\//,
+        ],
         loaders: [
           { test: /\.(jpe?g|png|gif|svg)$/, loader: 'url', query: {limit: 10240} },
-          { test: /\.js$/, exclude: /node_modules/, loaders: ['babel']},
-          { test: /\.json$/, loader: 'json-loader' },
+          {
+            test   : /\.jsx?$/,
+            exclude: /node_modules/,
+            loader: 'babel',
+          },
+          {
+            test: /\.json$/,
+            loader: 'json',
+          },
           {
             test  : /\.styl$/,
             loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]?browsers=last 2 version!stylus?outputStyle=expanded&sourceMap'
           },
         ],
-        postLoaders: [ { //delays coverage til after tests are run, fixing transpiled source coverage error
-          test: /\.js$/,
-          exclude: /(test|node_modules|bower_components)\//,
-          loader: 'istanbul-instrumenter',
-        }]
+        
       },
-
       resolve: {
+        alias: {
+          sinon: 'sinon/pkg/sinon',
+        },
         modulesDirectories: [
           'src',
           'node_modules'
         ],
-        extensions: ['', '.json', '.js']
+        //extensions: ['', '.json', '.js']
       },
+      // fix issues with using enzyme
+      externals: {
+        jsdom: 'window',
+        'react/lib/ExecutionEnvironment': true,
+        'react/lib/ReactContext': 'window',
+        'text-encoding': 'window',
+        'cheerio': 'window',
+        'react/addons': true,
+      },
+      // fix? issue with tape dep on fs
+      node: { fs: 'empty' },
       plugins: [
         new webpack.IgnorePlugin(/\.json$/),
         new webpack.NoErrorsPlugin(),

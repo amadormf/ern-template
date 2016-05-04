@@ -1,5 +1,4 @@
 require('babel-polyfill');
-
 const environment = {
   development: {
     isProduction: false,
@@ -34,6 +33,9 @@ module.exports = Object.assign({
         { property: 'og:image:height', content: '200 ' },
       ],
     },
+  },
+  routes: {
+    src: 'src/routes.js',
   },
 
 }, environment);

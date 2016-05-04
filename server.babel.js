@@ -1,9 +1,10 @@
+'use strict';  //eslint-disable-line
 //  enable runtime transpilation to use ES6/7 in node
 
-var fs = require('fs');
+const fs = require('fs');
 
-var babelrc = fs.readFileSync('./.babelrc');
-var config;
+const babelrc = fs.readFileSync('./.babelrc');
+let config;
 
 try {
   config = JSON.parse(babelrc);

@@ -4,9 +4,9 @@ import {
     App,
     Home,
     NotFound,
-  } from 'containers';
+  } from './containers';
 
-export default (store) =>
+export default (store, config) =>
   (
     <Route path="/" component={App}>
       { /* Home (main) route */ }
