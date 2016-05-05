@@ -31,7 +31,9 @@
     "dev": "concurrent --kill-others \"npm run watch-client\" \"npm run start-dev\"",
     "test": "karma start",
     "test:watch": "npm run test -- --watch",
-    "test:cov": "babel-node $(npm bin)/istanbul cover $(npm bin)/karma start -- --recursive"
+    "test:node": "mocha --require ./test/mocha_runner ./test/testNode.js",
+    "test:cov": "babel-node $(npm bin)/istanbul cover $(npm bin)/karma start -- --recursive",
+    "storybook": "start-storybook -p 9001"
   },
   "betterScripts": {
     "start-prod": {
@@ -116,6 +118,7 @@
     "webpack-isomorphic-tools": "^2.2.18"
   },
   "devDependencies": {
+    "@kadira/storybook": "^1.19.0",
     "babel-eslint": "^6.0.2",
     "babel-plugin-react-transform": "^2.0.0",
     "babel-plugin-typecheck": "^3.6.0",
@@ -133,6 +136,8 @@
     "extract-text-webpack-plugin": "^0.9.1",
     "font-awesome": "^4.4.0",
     "font-awesome-webpack": "0.0.4",
+    "glob": "^7.0.3",
+    "ignore-styles": "^1.2.0",
     "istanbul": "^0.4.3",
     "istanbul-instrumenter-loader": "^0.2.0",
     "json-loader": "^0.5.4",
